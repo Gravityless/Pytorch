@@ -3,7 +3,7 @@ import torchvision
 from PIL import Image
 from model import *
 
-img_path = "./dataset/dog.png"
+img_path = "../dataset/dog.png"
 img = Image.open(img_path).convert('RGB')
 
 transform = torchvision.transforms.Compose(

@@ -50,6 +50,6 @@ input = torch.ones((64, 3, 32, 32))
 output = xv(input)
 print(output.shape)
 
-writer = SummaryWriter("./logs")
+writer = SummaryWriter("../logs")
 writer.add_graph(xv, input)
 writer.close()

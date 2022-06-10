@@ -28,7 +28,7 @@ dataset = torchvision.datasets.CIFAR10("./CIFAR_dataset", train=False, download=
                                        transform=torchvision.transforms.ToTensor())
 dataloader = DataLoader(dataset, batch_size=64)
 
-writer = SummaryWriter("./logs")
+writer = SummaryWriter("../logs")
 step = 0
 for data in dataloader:
     imgs, target = data

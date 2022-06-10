@@ -20,7 +20,7 @@ class Xv(nn.Module):
 xv = Xv()
 # print(xv)
 
-writer = SummaryWriter("./logs")
+writer = SummaryWriter("../logs")
 step = 0
 for data in dataloader:
     imgs, targets = data

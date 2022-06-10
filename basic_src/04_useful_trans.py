@@ -2,8 +2,8 @@ from PIL import Image
 from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
 
-writer = SummaryWriter("logs")
-img = Image.open("seperate_dataset/train/ants_image/0013035.jpg")
+writer = SummaryWriter("../logs")
+img = Image.open("../seperate_dataset/train/ants_image/0013035.jpg")
 
 # ToTensor
 trans_totensor = transforms.ToTensor()

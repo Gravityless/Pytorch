@@ -3,7 +3,6 @@ import torchvision
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 
-from model import *
 from torch.utils.data import DataLoader
 
 train_data = torchvision.datasets.CIFAR10("./CIFAR_dataset", train=True, download=True,
@@ -15,9 +14,30 @@ test_dataloader = DataLoader(test_data, batch_size=64)
 print("train data size: {}".format(len(train_data)))
 print("test data size: {}".format(len(test_data)))
 
-xv = Xv()
+# device = torch.device("cpu")
+device = torch.device("cuda:0")
 
-loss_fn = nn.CrossEntropyLoss()
+class Xv(nn.Module):
+    def __init__(self):
+        super(Xv, self).__init__()
+        self.model = nn.Sequential(
+            nn.Conv2d(3, 32, 5, 1, 2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(32, 32, 5, 1, 2),
+            nn.MaxPool2d(2),
+            nn.Conv2d(32, 64, 5, 1, 2),
+            nn.MaxPool2d(2),
+            nn.Flatten(),
+            nn.Linear(1024, 64),
+            nn.Linear(64, 10)
+        )
+
+    def forward(self, x):
+        return self.model(x)
+
+xv = Xv().to(device)
+
+loss_fn = nn.CrossEntropyLoss().to(device)
 
 learning_rate = 0.01
 optimizer = torch.optim.SGD(xv.parameters(), learning_rate)
@@ -26,7 +46,7 @@ total_train_step = 0
 total_test_step = 0
 epoch = 10
 
-writer = SummaryWriter("./logs")
+writer = SummaryWriter("../logs")
 
 for i in range(epoch):
     print("--------------epoch {} starting---------------".format(i+1))
@@ -35,6 +55,8 @@ for i in range(epoch):
     xv.train()
     for data in train_dataloader:
         imgs, targets = data
+        imgs = imgs.to(device)
+        targets = targets.to(device)
         outputs = xv(imgs)
         loss = loss_fn(outputs, targets)
 
@@ -52,6 +74,8 @@ for i in range(epoch):
     with torch.no_grad():
         for data in test_dataloader:
             imgs, targets = data
+            imgs = imgs.to(device)
+            targets = targets.to(device)
             outputs = xv(imgs)
             loss = loss_fn(outputs, targets)
             total_test_loss += loss.item()
